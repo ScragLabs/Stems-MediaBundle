@@ -1,0 +1,3 @@
+stems_media_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: StemsMediaBundle:Default:index }
