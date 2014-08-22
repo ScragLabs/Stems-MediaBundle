@@ -1,3 +1,3 @@
-stems_media_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: StemsMediaBundle:Default:index }
+stems_admin_media_overview:
+    pattern:  /admin/media
+    defaults: { _controller: StemsMediaBundle:Admin:index }
