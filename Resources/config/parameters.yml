@@ -1,0 +1,9 @@
+parameters:
+
+    # Admin menu items
+    stems.admin.menu_core_stemsmediabundle:
+        stems_media:
+            title: 'Media & Files'
+            route: 'stems_admin_media_overview'
+            icon: 'fa fa-film'
+            children: []
