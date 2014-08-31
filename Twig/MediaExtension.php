@@ -19,7 +19,7 @@ class MediaExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			new \Twig_SimpleFilter('getMediaImage', array($this, 'getMediaImageFunction')),
+			new \Twig_SimpleFunction('getMediaImage', array($this, 'getMediaImageFunction')),
 		);
 	}
 
@@ -29,10 +29,10 @@ class MediaExtension extends \Twig_Extension
 	}
 
 	/**
-	 * Gets the src of the media image file based on the id provided
+	 * Gets a media image entity based on the id provided
 	 *
-	 * @param  integer  $id         The id media image entity
-	 * @return string               The image src
+	 * @param  integer  $id 	The id media image entity
+	 * @return Image  			The image entity
 	 */
 	public function getMediaImageFunction($id)
 	{
@@ -44,6 +44,6 @@ class MediaExtension extends \Twig_Extension
 			return null;
 		}
 
-		return $image->getSrc();
+		return $image;
 	}	
 }
