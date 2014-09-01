@@ -13,222 +13,398 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Image
 {
-    /** 
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+	/** 
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	protected $id;
 
-    /** 
-     * @ORM\Column(type="string")
-     */
-    protected $filename;
+	/** 
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $title;
 
-    /** 
-     * @ORM\Column(type="string")
-     */
-    protected $src;
+	/**
+	 * @Assert\File(maxSize="10000000")
+	 */
+	protected $upload;
 
-    /** 
-     * @ORM\Column(type="string")
-     */
-    protected $category = 'uncategorised';
+	/** 
+	 * @ORM\Column(type="string")
+	 */
+	protected $filename;
 
-    /**
-     * @ORM\Column(type="string") 
-     */
-    protected $mime;
+	/** 
+	 * @ORM\Column(type="string")
+	 */
+	protected $src;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $deleted = false;
+	/** 
+	 * @ORM\Column(type="string")
+	 */
+	protected $category = 'uncategorised';
 
-    /** 
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
+	/**
+	 * @ORM\Column(type="string") 
+	 */
+	protected $mime;
 
-    /** 
-     * @ORM\Column(type="datetime")
-     */
-    protected $updated;
+	/** 
+	 * @ORM\Column(type="integer")
+	 */
+	protected $height;
 
-    public function __construct()
-    {
-        $this->created = new \DateTime;
-        $this->updated = new \DateTime;
-    }
+	/** 
+	 * @ORM\Column(type="integer")
+	 */
+	protected $width;
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	protected $deleted = false;
 
-    /**
-     * Set filename
-     *
-     * @param string $filename
-     * @return Image
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-    
-        return $this;
-    }
+	/** 
+	 * @ORM\Column(type="datetime")
+	 */
+	protected $created;
 
-    /**
-     * Get filename
-     *
-     * @return string 
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
+	/** 
+	 * @ORM\Column(type="datetime")
+	 */
+	protected $updated;
 
-    /**
-     * Set src
-     *
-     * @param string $src
-     * @return Image
-     */
-    public function setSrc($src)
-    {
-        $this->src = $src;
-    
-        return $this;
-    }
+	public function __construct()
+	{
+		$this->created = new \DateTime;
+		$this->updated = new \DateTime;
+	}
 
-    /**
-     * Get src
-     *
-     * @return string 
-     */
-    public function getSrc()
-    {
-        return $this->src;
-    }
+	/**
+	 * Handle the file upload
+	 */
+	public function doUpload()
+	{
+		// If no file upload is present
+		if (null === $this->getUpload()) {
+			die();
+			return;
+		}
 
-    /**
-     * Set category
-     *
-     * @param string $category
-     * @return Image
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    
-        return $this;
-    }
+		$this->setMime($this->getUpload()->getMimeType());
 
-    /**
-     * Get category
-     *
-     * @return string 
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
+		// Tidy up the filename a bit, first take the extension off the end
+		$filename  = explode('.', $this->getUpload()->getClientOriginalName());
+		$extension = end($filename);
+		array_pop($filename);
+		$filename  = implode($filename);
 
-    /**
-     * Set mime
-     *
-     * @param string $mime
-     * @return Image
-     */
-    public function setMime($mime)
-    {
-        $this->mime = $mime;
-    
-        return $this;
-    }
+		// Replace anything non-alphanumeric with a dash
+		$filename = preg_replace('~[^\\pL\d]+~u', '-', $filename);
 
-    /**
-     * Get mime
-     *
-     * @return string 
-     */
-    public function getMime()
-    {
-        return $this->mime;
-    }
+		// Trim
+		$filename = trim($filename, '-');
 
-    /**
-     * Set deleted
-     *
-     * @param boolean $deleted
-     * @return Image
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-    
-        return $this;
-    }
+		// Transliterate
+		$filename = iconv('utf-8', 'us-ascii//TRANSLIT', $filename);
 
-    /**
-     * Get deleted
-     *
-     * @return boolean 
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
+		// Lowercase
+		$filename = strtolower($filename);
 
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Image
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    
-        return $this;
-    }
+		// Remove unwanted characters
+		$filename = preg_replace('~[^-\w]+~', '', $filename);
 
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
+		// Save the uploaded file
+		$this->getUpload()->move($this->getServerRoot(), $filename.'.'.$extension);
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Image
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    
-        return $this;
-    }
+		// Store the file information
+		$this->setFilename($filename.'.'.$extension);
+		$this->setSrc('/'.$this->getWebRoot().'/'.$this->filename);
+		$this->setWidth(getimagesize($this->getServerRoot().'/'.$filename.'.'.$extension)[0]);
+		$this->setHeight(getimagesize($this->getServerRoot().'/'.$filename.'.'.$extension)[1]);
 
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
+		// Clean up the upload property as we don't need it anymore
+		$this->upload = null;
+	}
+
+	/**
+	 * Get id
+	 *
+	 * @return integer 
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * Set title
+	 *
+	 * @param string $title
+	 * @return Image
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+	
+		return $this;
+	}
+
+	/**
+	 * Get title
+	 *
+	 * @return string 
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	/**
+	 * Set filename
+	 *
+	 * @param string $filename
+	 * @return Image
+	 */
+	public function setFilename($filename)
+	{
+		$this->filename = $filename;
+	
+		return $this;
+	}
+
+	/**
+	 * Get filename
+	 *
+	 * @return string 
+	 */
+	public function getFilename()
+	{
+		return $this->filename;
+	}
+
+	/**
+	 * Set upload
+	 *
+	 * @param UploadedFile $upload
+	 */
+	public function setUpload(UploadedFile $upload = null)
+	{
+		$this->upload = $upload;
+	}
+
+	/**
+	 * Get upload
+	 *
+	 * @return UploadedFile
+	 */
+	public function getUpload()
+	{
+		return $this->upload;
+	}
+
+	/**
+	 * Get the web root for the image src
+	 *
+	 * @return string
+	 */
+	public function getWebRoot()
+	{
+		return 'media/image/original';
+	}
+
+	/**
+	 * Get the server root for the image
+	 *
+	 * @return string
+	 */
+	public function getServerRoot()
+	{
+		return __DIR__.'/../../../../web/'.$this->getWebRoot();
+	}
+
+	/**
+	 * Set src
+	 *
+	 * @param string $src
+	 * @return Image
+	 */
+	public function setSrc($src)
+	{
+		$this->src = $src;
+	
+		return $this;
+	}
+
+	/**
+	 * Get src
+	 *
+	 * @return string 
+	 */
+	public function getSrc()
+	{
+		return $this->src;
+	}
+
+	/**
+	 * Set width
+	 *
+	 * @param integer $width
+	 * @return Image
+	 */
+	public function setWidth($width)
+	{
+		$this->width = $width;
+	
+		return $this;
+	}
+
+	/**
+	 * Get width
+	 *
+	 * @return integer 
+	 */
+	public function getWidth()
+	{
+		return $this->width;
+	}
+
+	/**
+	 * Set height
+	 *
+	 * @param integer $height
+	 * @return Image
+	 */
+	public function setHeight($height)
+	{
+		$this->height = $height;
+	
+		return $this;
+	}
+
+	/**
+	 * Get height
+	 *
+	 * @return integer 
+	 */
+	public function getHeight()
+	{
+		return $this->height;
+	}
+
+	/**
+	 * Set category
+	 *
+	 * @param string $category
+	 * @return Image
+	 */
+	public function setCategory($category)
+	{
+		$this->category = $category;
+	
+		return $this;
+	}
+
+	/**
+	 * Get category
+	 *
+	 * @return string 
+	 */
+	public function getCategory()
+	{
+		return $this->category;
+	}
+
+	/**
+	 * Set mime
+	 *
+	 * @param string $mime
+	 * @return Image
+	 */
+	public function setMime($mime)
+	{
+		$this->mime = $mime;
+	
+		return $this;
+	}
+
+	/**
+	 * Get mime
+	 *
+	 * @return string 
+	 */
+	public function getMime()
+	{
+		return $this->mime;
+	}
+
+	/**
+	 * Set deleted
+	 *
+	 * @param boolean $deleted
+	 * @return Image
+	 */
+	public function setDeleted($deleted)
+	{
+		$this->deleted = $deleted;
+	
+		return $this;
+	}
+
+	/**
+	 * Get deleted
+	 *
+	 * @return boolean 
+	 */
+	public function getDeleted()
+	{
+		return $this->deleted;
+	}
+
+	/**
+	 * Set created
+	 *
+	 * @param \DateTime $created
+	 * @return Image
+	 */
+	public function setCreated($created)
+	{
+		$this->created = $created;
+	
+		return $this;
+	}
+
+	/**
+	 * Get created
+	 *
+	 * @return \DateTime 
+	 */
+	public function getCreated()
+	{
+		return $this->created;
+	}
+
+	/**
+	 * Set updated
+	 *
+	 * @param \DateTime $updated
+	 * @return Image
+	 */
+	public function setUpdated($updated)
+	{
+		$this->updated = $updated;
+	
+		return $this;
+	}
+
+	/**
+	 * Get updated
+	 *
+	 * @return \DateTime 
+	 */
+	public function getUpdated()
+	{
+		return $this->updated;
+	}
 }
