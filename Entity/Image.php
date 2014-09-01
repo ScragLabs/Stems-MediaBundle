@@ -88,7 +88,6 @@ class Image
 	{
 		// If no file upload is present
 		if (null === $this->getUpload()) {
-			die();
 			return;
 		}
 
