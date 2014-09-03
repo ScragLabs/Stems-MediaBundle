@@ -43,7 +43,7 @@ class Image
 	/** 
 	 * @ORM\Column(type="string")
 	 */
-	protected $category = 'uncategorised';
+	protected $category = 'general';
 
 	/**
 	 * @ORM\Column(type="string") 

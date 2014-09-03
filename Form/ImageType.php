@@ -8,6 +8,13 @@ use Symfony\Component\Form\AbstractType,
 
 class ImageType extends AbstractType
 {
+	protected $categories;
+
+	public function __construct($categories) 
+	{
+		$this->categories = $categories;
+	}
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 		$builder->add('title', null, array(
@@ -19,7 +26,7 @@ class ImageType extends AbstractType
 			'label'     		=> 'Category',
 			'error_bubbling' 	=> true,
 			'empty_value' 		=> false,
-			'choices'			=> array('uncategorised' => 'None', 'blog' => 'Blog'),
+			'choices'			=> $this->categories,
 		));	
 
 		$builder->add('upload', null, array(

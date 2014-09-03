@@ -1,5 +1,9 @@
 parameters:
 
+    # Media categories
+    stems.media.image.categories: 
+        general: 'General'
+
     # Admin menu items
     stems.admin.menu_core_stemsmediabundle:
         stems_media:
@@ -7,3 +11,5 @@ parameters:
             route: 'stems_admin_media_overview'
             icon: 'fa fa-film'
             children: []
+
+    # Bundle specific
