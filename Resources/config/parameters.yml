@@ -3,12 +3,13 @@ parameters:
     # Media categories
     stems.media.image.categories: 
         general: 'General'
+        blog: 'Blog'
 
     # Admin menu items
     stems.admin.menu_core_stemsmediabundle:
         stems_media:
             title: 'Media & Files'
-            route: 'stems_admin_media_overview'
+            route: 'stems_admin_media_galleries'
             icon: 'fa fa-film'
             children: []
 

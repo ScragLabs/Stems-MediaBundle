@@ -1,3 +1,33 @@
+# Admin routes
+
 stems_admin_media_overview:
     pattern:  /admin/media
     defaults: { _controller: StemsMediaBundle:Admin:index }
+
+stems_admin_media_galleries:
+    pattern:  /admin/media/galleries
+    defaults: { _controller: StemsMediaBundle:Admin:galleries }
+
+stems_admin_media_galleries_create:
+    pattern:  /admin/media/galleries/create
+    defaults: { _controller: StemsMediaBundle:Admin:createGallery }
+
+stems_admin_media_galleries_edit:
+    pattern:  /admin/media/galleries/{id}/edit
+    defaults: { _controller: StemsMediaBundle:Admin:editGallery }
+
+stems_admin_media_galleries_delete:
+    pattern:  /admin/media/galleries/{id}/delete
+    defaults: { _controller: StemsMediaBundle:Admin:deleteGallery }
+
+stems_admin_media_galleries_publish:
+    pattern:  /admin/media/galleries/{id}/publish
+    defaults: { _controller: StemsMediaBundle:Admin:publishGallery }
+
+stems_rest_blog_parse_productgalleryproduct:
+    pattern:  /admin/blog/rest/parse-product-gallery-product/{id}
+    defaults: { _controller: StemsBlogBundle:Rest:parseProductGalleryProduct }
+
+stems_rest_blog_update_productgalleryproduct:
+    pattern:  /admin/blog/rest/update-product-gallery-product/{id}
+    defaults: { _controller: StemsBlogBundle:Rest:updateProductGalleryProduct }

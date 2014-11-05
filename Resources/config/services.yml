@@ -1,14 +1,14 @@
 services:
 
-	# Forms
+    # Forms
     stems.media.form.type.image:
         class: Stems\MediaBundle\Form\ImageType
         arguments: 
-        	categories: %stems.media.image.categories%
+            categories: %stems.media.image.categories%
         tags:
-            - { name: form.type, alias: media_image }
+            - { name: form.type, alias: media_image_type }
 
-	# Services
+    # Services
     stems.media.twig.media_extension:
             class: Stems\MediaBundle\Twig\MediaExtension
             arguments: 

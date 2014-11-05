@@ -10,7 +10,7 @@ class ImageType extends AbstractType
 {
 	protected $categories;
 
-	public function __construct($categories) 
+	public function __construct($categories = array('General' => 'general')) 
 	{
 		$this->categories = $categories;
 	}

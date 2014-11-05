@@ -1,0 +1,49 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Edit Gallery &middot; {{ gallery.title }}{% endblock %}
+
+{% block content %}
+	<h1 class="pages">Edit Gallery: <span>{{ gallery.title }}</span></h1>
+	{{ form_errors(form) }}
+	<form method="post">
+		<div class="admin-editor admin-gallery-editor">
+			<div class="edit-tabs">
+				<ul>
+					<li></li>
+					<li><a href="#" data-tab="edit-gallery-content">Content <i class="fa fa-file-text-o fa-fw"></i></a></li>
+					{# <li><a href="#" data-tab="edit-gallery-tags">Tags <i class="fa fa-tags fa-fw"></i></a></li> #}
+					<li><a href="#" data-tab="edit-gallery-seo">SEO <i class="fa fa-bar-chart-o fa-fw"></i></a></li>
+					<li></li>
+				</ul>
+			</div>
+			<div class="edit-panels">
+				<div class="edit-panel" id="edit-gallery-seo" style="height:0px">
+					{{ form_row(form.metaTitle) }}
+					{{ form_row(form.metaKeywords) }}
+					{{ form_row(form.metaDescription) }}
+				</div>
+				<div class="edit-panel" id="edit-gallery-tags" style="height:0px">
+					Tags go here
+				</div>
+				<div class="edit-panel" id="edit-gallery-content">
+					{{ form_row(form.title) }}
+					{{ form_row(form.excerpt) }}
+					{{ form_row(form.slug) }}
+					
+					{# Gallery section goes here #}
+				</div>
+			</div>
+		</div>
+		<br class="clear">
+		<div class="admin-editor-controls">
+			<input class="btn btn-success" type="submit" value="Save">
+			{% if gallery.status == 'Published' %}
+				<a href="{{ path('stems_admin_media_gallery_publish', { 'id' : gallery.id }) }}" class="btn btn-warning" >Unpublish</a>
+			{% else %}
+				<a href="{{ path('stems_admin_media_gallery_publish', { 'id' : gallery.id }) }}" class="btn btn-success" >Publish</a>
+			{% endif %}
+			<a href="{{ path('stems_admin_media_gallery_delete', { 'id' : gallery.id }) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this gallery?" >Delete</a>
+			<a href="{{ path('stems_admin_media_gallery_overview') }}"class="btn" >Cancel</a>
+		</div>
+	</form>
+{% endblock %}
