@@ -78,7 +78,7 @@ class AdminController extends BaseAdminController
 
 		// Throw an error if the gallery could not be found
 		if (!$gallery) {
-			$request->getSession()->setFlash('error', 'The requested gallery could not be found.');
+			$request->getSession()->getFlashBag()->set('error', 'The requested gallery could not be found.');
 			return $this->redirect($this->generateUrl('stems_admin_media_galleries'));
 		}
 
@@ -90,7 +90,7 @@ class AdminController extends BaseAdminController
 		if ($request->getMethod() == 'POST') {
 
 			// Validate the submitted values
-			$form->bindRequest($request);
+			$form->bind($request);
 
 			//if ($form->isValid()) {
 
@@ -131,13 +131,13 @@ class AdminController extends BaseAdminController
 					
 					$em->persist($gallery);
 					$em->flush();
-					$request->getSession()->setFlash('success', 'The gallery "'.$gallery->getTitle().'" has been updated.');
+					$request->getSession()->getFlashBag()->set('success', 'The gallery "'.$gallery->getTitle().'" has been updated.');
 
 					return $this->redirect($this->generateUrl('stems_admin_media_galleries'));
 
 				// } else {
-				// 	$request->getSession()->setFlash('error', 'Your request was not processed as errors were found.');
-				// 	$request->getSession()->setFlash('debug', '');
+				// 	$request->getSession()->getFlashBag()->set('error', 'Your request was not processed as errors were found.');
+				// 	$request->getSession()->getFlashBag()->set('debug', '');
 				// }
 			//}
 		}
@@ -170,10 +170,10 @@ class AdminController extends BaseAdminController
 			$em->flush();
 
 			// Return the success message
-			$request->getSession()->setFlash('success', 'The gallery "'.$name.'" was successfully deleted!');
+			$request->getSession()->getFlashBag()->set('success', 'The gallery "'.$name.'" was successfully deleted!');
 
 		} else {
-			$request->getSession()->setFlash('error', 'The requested gallery could not be deleted as it does not exist in the database.');
+			$request->getSession()->getFlashBag()->set('error', 'The requested gallery could not be deleted as it does not exist in the database.');
 		}
 
 		return $this->redirect($this->generateUrl('stems_admin_media_galleries'));
@@ -196,17 +196,17 @@ class AdminController extends BaseAdminController
 			if ($gallery->getStatus() == 'Draft') {	
 				$gallery->setStatus('Published');
 				$gallery->setPublished(new \DateTime());
-				$request->getSession()->setFlash('success', 'The gallery "'.$gallery->getTitle().'" was successfully published!');
+				$request->getSession()->getFlashBag()->set('success', 'The gallery "'.$gallery->getTitle().'" was successfully published!');
 			} else {
 				$gallery->setStatus('Draft');
-				$request->getSession()->setFlash('success', 'The gallery "'.$gallery->getTitle().'" was successfully unpublished!');
+				$request->getSession()->getFlashBag()->set('success', 'The gallery "'.$gallery->getTitle().'" was successfully unpublished!');
 			}
 
 			$em->persist($gallery);
 			$em->flush();
 
 		} else {
-			$request->getSession()->setFlash('error', 'The requested gallery could not be published as it does not exist in the database.');
+			$request->getSession()->getFlashBag()->set('error', 'The requested gallery could not be published as it does not exist in the database.');
 		}
 
 		return $this->redirect($this->generateUrl('stems_admin_media_galleries'));
