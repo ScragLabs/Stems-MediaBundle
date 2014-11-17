@@ -1,6 +1,6 @@
 <?php
 
-namespace Stems\ImageBundle\Entity;
+namespace Stems\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -248,10 +248,10 @@ class SectionImageGalleryImage
     /**
      * Set sectionImageGallery
      *
-     * @param \Stems\ImageBundle\Entity\SectionImageGallery $sectionImageGallery
+     * @param \Stems\MediaBundle\Entity\SectionImageGallery $sectionImageGallery
      * @return SectionImageGalleryImage
      */
-    public function setSectionImageGallery(\Stems\ImageBundle\Entity\SectionImageGallery $sectionImageGallery = null)
+    public function setSectionImageGallery(\Stems\MediaBundle\Entity\SectionImageGallery $sectionImageGallery = null)
     {
         $this->sectionImageGallery = $sectionImageGallery;
     
@@ -261,7 +261,7 @@ class SectionImageGalleryImage
     /**
      * Get sectionImageGallery
      *
-     * @return \Stems\ImageBundle\Entity\SectionImageGallery 
+     * @return \Stems\MediaBundle\Entity\SectionImageGallery 
      */
     public function getSectionImageGallery()
     {
