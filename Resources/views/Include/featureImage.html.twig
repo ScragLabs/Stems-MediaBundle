@@ -1,0 +1,25 @@
+<div class="feature-image-container">
+	{% if article.image is not empty %}
+		<div class="feature-image">
+			<img src="{{ getMediaImage(article.image).src }}" width="760"/>
+			<div class="button-holder">
+				<div>
+					<div>
+						<a class="btn btn-primary rest-get-popup" href="{{ path('stems_media_popup_setfeatureimage', { 'category' : category, 'existing' : getMediaImage(article.image).src|url_encode(true) }) }}"><i class="fa fa-picture-o"></i> Change Feature Image</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="feature-image feature-image-empty">
+			<div class="button-holder">
+				<div>
+					<div>
+						<a class="btn btn-primary rest-get-popup" href="{{ path('stems_media_popup_setfeatureimage', { 'category' : category }) }}"><i class="fa fa-picture-o"></i> Add Feature Image</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	{{ form_widget(form.image) }}
+</div>

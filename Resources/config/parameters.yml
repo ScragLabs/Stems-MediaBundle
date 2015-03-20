@@ -3,7 +3,8 @@ parameters:
     # Media categories
     stems.media.image.categories: 
         general: 'General'
-        blog: 'Blog'
+        blog:    'Blog'
+        page:    'Page'
 
     # Admin menu items
     stems.admin.menu_core_stemsmediabundle:

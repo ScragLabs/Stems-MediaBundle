@@ -24,10 +24,11 @@ stems_admin_media_galleries_publish:
     pattern:  /admin/media/galleries/{id}/publish
     defaults: { _controller: StemsMediaBundle:Admin:publishGallery }
 
-stems_rest_blog_parse_productgalleryproduct:
-    pattern:  /admin/blog/rest/parse-product-gallery-product/{id}
-    defaults: { _controller: StemsBlogBundle:Rest:parseProductGalleryProduct }
+stems_media_rest:
+    resource: "@StemsMediaBundle/Controller/RestController.php"
+    type:     annotation
 
-stems_rest_blog_update_productgalleryproduct:
-    pattern:  /admin/blog/rest/update-product-gallery-product/{id}
-    defaults: { _controller: StemsBlogBundle:Rest:updateProductGalleryProduct }
+stems_media_popup:
+    resource: "@StemsMediaBundle/Controller/PopupController.php"
+    type:     annotation
+

@@ -2,53 +2,47 @@
 
 namespace Stems\MediaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-	Symfony\Component\HttpFoundation\RedirectResponse,
-	Symfony\Component\HttpFoundation\JsonResponse,
-	Symfony\Component\HttpFoundation\Request;
+use Stems\CoreBundle\Controller\BaseRestController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Stems\MediaBundle\Entity\Image;
 
-class RestController extends Controller
+class RestController extends BaseRestController
 {
 	/**
-	 * Display the media manager pop-up admin dialogue
+	 * Handle and set a feature image upload
+	 *
+	 * @Route("/admin/rest/media/set-feature-image/{category}", name="stems_media_rest_setfeatureimage")
 	 */
-	public function dialogueAction()
+	public function setFeatureImageAction(Request $request, $category)
 	{
-		$em = $this->getDoctrine()->getManager();
-		
-		$html = $this->renderView('StemsMediaBundle:Rest:dialogue.html.twig', array(
-			'vars'	=> null,
-		));
+		$image = new Image();
+		$image->setCategory($category);
 
-		return new JsonResponse(array(
-			'success'   => true,
-			'html'		=> $html,
-		));
-	}
+		// Build the form 
+		$form = $this->createForm('media_image_type', $image);
 
-	/**
-	 * Upload an image and process sizes
-	 */
-	public function uploadImageAction()
-	{
-		$em = $this->getDoctrine()->getManager();
+		if ($form->bind($request)->isValid()) {
 
-		return new JsonResponse(array(
-			'success'   => true,
-			'message' 	=> '',
-		));
-	}
+			// Upload the file and save the entity
+			$em = $this->getDoctrine()->getEntityManager();
 
-	/**
-	 * Parse an image from a url and process sizes
-	 */
-	public function parseImageAction()
-	{
-		$em = $this->getDoctrine()->getManager();
+			$image->doUpload();
+			$em->persist($image);
+			$em->flush();
 
-		return new JsonResponse(array(
-			'success'   => true,
-			'message' 	=> '',
-		));
+			$meta = array('id' => $image->getId());
+
+			// Get the html for updating the feature image
+			$html = $this->renderView('StemsMediaBundle:Rest:setFeatureImage.html.twig', array(
+				'image'	=> $image,
+			));
+
+			return $this->addHtml($html)->setCallback('updateFeatureImage')->addMeta($meta)->success('Image updated.')->sendResponse();
+		} else {
+			return $this->error('Please choose an image to upload.', true)->sendResponse();
+		}
 	}
 }
