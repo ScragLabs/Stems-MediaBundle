@@ -87,7 +87,7 @@ class Image
 	public function doUpload()
 	{
 		// If no file upload is present
-		if (null === $this->getUpload()) {
+		if ($this->getUpload() === null || $this->getUpload() === 'undefined') {
 			return;
 		}
 
@@ -188,7 +188,7 @@ class Image
 	 *
 	 * @param UploadedFile $upload
 	 */
-	public function setUpload(UploadedFile $upload = null)
+	public function setUpload($upload = null)
 	{
 		$this->upload = $upload;
 	}
