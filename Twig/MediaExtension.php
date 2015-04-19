@@ -23,6 +23,13 @@ class MediaExtension extends \Twig_Extension
 		);
 	}
 
+	public function getFilters()
+	{
+		return array(
+			new \Twig_SimpleFilter('transparentColor', array($this, 'transparentColorFilter')),
+		);
+	}
+
 	public function getName()
 	{
 		return 'stems_media_extension';
@@ -45,5 +52,30 @@ class MediaExtension extends \Twig_Extension
 		}
 
 		return $image;
-	}	
+	}
+
+	/**
+	 * Make the background color of an image transparent and save as a png
+	 *
+	 * @param  integer  $id 	The path of the image to modify
+	 * @param  array    $color  Tolerance of the replace, 10 = 1/255 in RGB
+	 * @return string  			The path of the converted image
+	 */
+	public function transparentColorFilter($src, $tolerance = 3200)
+	{
+
+		// Hacky
+		$webPath = substr($src, strpos($src, '/media/cache'));
+		$newSrc  = str_replace('.jpg', '.png', $webPath);
+
+		// Only process if it doesn't already exist
+		if (!file_exists($_SERVER['DOCUMENT_ROOT'].$newSrc)) {
+			$im = new \Imagick($_SERVER['DOCUMENT_ROOT'].$webPath);
+			$im->paintTransparentImage($im->getImagePixelColor(0, 0), 0, $tolerance);
+			$im->setImageFormat("png");
+			$im->writeImage($_SERVER['DOCUMENT_ROOT'].$newSrc);
+		}
+
+		return $newSrc;
+	}
 }
