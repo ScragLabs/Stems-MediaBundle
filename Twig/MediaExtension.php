@@ -57,14 +57,13 @@ class MediaExtension extends \Twig_Extension
 	/**
 	 * Make the background color of an image transparent and save as a png
 	 *
-	 * @param  integer  $id 	The path of the image to modify
-	 * @param  array    $color  Tolerance of the replace, 10 = 1/255 in RGB
-	 * @return string  			The path of the converted image
+	 * @param  string       $src 	        The path of the image to modify
+	 * @param  integer      $tolerance      Tolerance of the replace, 10 = 1/255 in RGB
+	 * @return string  		    	        The path of the converted image
 	 */
-	public function transparentColorFilter($src, $tolerance = 3200)
+	public function transparentColorFilter($src, $tolerance = 1600)
 	{
-
-		// Hacky
+		// This needs handling better
 		$webPath = substr($src, strpos($src, '/media/cache'));
 		$newSrc  = str_replace('.jpg', '.png', $webPath);
 
