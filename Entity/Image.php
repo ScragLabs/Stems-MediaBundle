@@ -2,6 +2,7 @@
 namespace Stems\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Mapping as ORM;
@@ -128,6 +129,32 @@ class Image
 	}
 
 	/**
+	 * Download the file, save and update entity
+	 */
+	public function doDownload($url)
+	{
+		// Store the basic file information
+		$filename = explode('/', $url);
+		$filename = end($filename);
+
+		$this->setFilename($filename);
+		$this->setCategory('download');
+		$this->setSrc('/'.$this->getWebRoot().'/'.$filename);
+
+		// Perform the download
+		ini_set('allow_url_fopen', true);
+		$url = strpos($url, 'http:') === 0 ? $url : 'http:'.$url;
+		copy($url, $this->getPathname());
+		ini_set('allow_url_fopen', false);
+
+		// Update the other image data
+		$guesser = MimeTypeGuesser::getInstance();
+		$this->setMime($guesser->guess($this->getPathname()));
+		$this->setWidth(getimagesize($this->getPathname())[0]);
+		$this->setHeight(getimagesize($this->getPathname())[1]);
+	}
+
+	/**
 	 * Get id
 	 *
 	 * @return integer 
@@ -210,7 +237,7 @@ class Image
 	 */
 	public function getWebRoot()
 	{
-		return 'media/image/original';
+		return 'media/image/'.$this->category;
 	}
 
 	/**
@@ -221,6 +248,14 @@ class Image
 	public function getServerRoot()
 	{
 		return __DIR__.'/../../../../web/'.$this->getWebRoot();
+	}
+
+	/**
+	 * Get the full path for the image file
+	 */
+	public function getPathname()
+	{
+		return $this->getServerRoot().'/'.$this->filename;
 	}
 
 	/**

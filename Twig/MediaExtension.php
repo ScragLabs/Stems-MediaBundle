@@ -3,6 +3,7 @@
 namespace Stems\MediaBundle\Twig;
 
 use Doctrine\ORM\EntityManager;
+use Stems\MediaBundle\Entity\Image;
 
 class MediaExtension extends \Twig_Extension
 {
@@ -20,6 +21,7 @@ class MediaExtension extends \Twig_Extension
 	{
 		return array(
 			new \Twig_SimpleFunction('getMediaImage', array($this, 'getMediaImageFunction')),
+			new \Twig_SimpleFunction('getImageFromUrl', array($this, 'getImageFromUrlFunction'))
 		);
 	}
 
@@ -50,6 +52,33 @@ class MediaExtension extends \Twig_Extension
 		if (!is_object($image)) {
 			return null;
 		}
+
+		return $image;
+	}
+
+	/**
+	 * Gets an image from a url and saves it locally
+	 *
+	 * @param  string       $src 	    The path of the image to modify
+	 * @return Image  			        The image entity
+	 */
+	public function getImageFromUrlFunction($src)
+	{
+		// Use the filename to see if we've already downloaded it
+		$filename = explode('/', $src);
+		$filename = end($filename);
+		$image = $this->em->getRepository('StemsMediaBundle:Image')->findOneBy(array('filename' => $filename, 'category' => 'download'));
+
+		// Return image if it already exists
+		if (is_object($image)) {
+			return $image;
+		}
+
+		// Download and save via curl if it doesn't
+		$image = new Image();
+		$image->doDownload($src);
+		$this->em->persist($image);
+		$this->em->flush();
 
 		return $image;
 	}
