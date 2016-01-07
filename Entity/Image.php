@@ -27,6 +27,11 @@ class Image
 	protected $title;
 
 	/**
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $accreditation;
+
+	/**
 	 * @Assert\File(maxSize="10000000")
 	 */
 	protected $upload;
@@ -185,6 +190,29 @@ class Image
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * Set accreditation
+	 *
+	 * @param string $accreditation
+	 * @return Image
+	 */
+	public function setAccreditation($accreditation)
+	{
+		$this->accreditation = $accreditation;
+
+		return $this;
+	}
+
+	/**
+	 * Get accreditation
+	 *
+	 * @return string
+	 */
+	public function getAccreditation()
+	{
+		return $this->accreditation;
 	}
 
 	/**

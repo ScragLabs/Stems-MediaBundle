@@ -22,6 +22,11 @@ class ImageType extends AbstractType
 			'error_bubbling' 	=> true,
 		));
 
+	    $builder->add('accreditation', null, array(
+		    'label'  			=> 'Accreditation (Optional)',
+		    'error_bubbling' 	=> true,
+	    ));
+
 		$builder->add('category', 'choice', array(
 			'label'     		=> 'Category',
 			'error_bubbling' 	=> true,

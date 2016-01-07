@@ -9,6 +9,7 @@
 		<div class="column">
 			<form action="{{ path('stems_media_rest_setfeatureimage', { category : form.vars.value.category }) }}" enctype="multipart/form-data">
 				{{ form_row(form.title) }}
+                {{ form_row(form.accreditation) }}
 				{{ form_row(form.upload) }}
 				<div class="invisible">
 					{{ form_row(form.category) }}
