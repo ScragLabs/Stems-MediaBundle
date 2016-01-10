@@ -27,13 +27,13 @@ class RestController extends BaseRestController
 		if ($form->bind($request)->isValid()) {
 
 			// Upload the file and save the entity
-			$em = $this->getDoctrine()->getEntityManager();
+			$em = $this->getDoctrine()->getManager();
 
 			$image->doUpload();
 			$em->persist($image);
 			$em->flush();
 
-			$meta = array('id' => $image->getId());
+			$meta = ['id' => $image->getId()];
 
 			// Get the html for updating the feature image
 			$html = $this->renderView('StemsMediaBundle:Rest:setFeatureImage.html.twig', array(
