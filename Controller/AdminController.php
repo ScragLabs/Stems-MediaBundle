@@ -107,7 +107,7 @@ class AdminController extends BaseAdminController
 				foreach ($request->get('sections') as $section) {
 					
 					// Attach and update order
-					$sectionEntity = $em->getRepository('StemsBlogBundle:Section')->find($section);
+					$sectionEntity = $em->getRepository('ThreadAndMirrorBlogBundle:Section')->find($section);
 					$sectionEntity->setPost($gallery);
 					$sectionEntity->setPosition($position);
 
@@ -142,7 +142,7 @@ class AdminController extends BaseAdminController
 			//}
 		}
 
-		return $this->render('StemsBlogBundle:Admin:edit.html.twig', array(
+		return $this->render('ThreadAndMirrorBlogBundle:Admin:edit.html.twig', array(
 			'form'			=> $form->createView(),
 			'sectionForm'	=> $sectionForm->createView(),
 			'gallery' 		=> $gallery,
