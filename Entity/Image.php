@@ -148,7 +148,7 @@ class Image
 
 		// Perform the download
 		ini_set('allow_url_fopen', true);
-		$url = strpos($url, 'http:') === 0 ? $url : 'http:'.$url;
+		$url = strpos($url, 'http') === 0 ? $url : 'http:'.$url;
 		copy($url, $this->getPathname());
 		ini_set('allow_url_fopen', false);
 
