@@ -17,34 +17,34 @@ class ImageType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-		$builder->add('title', null, array(
+		$builder->add('title', null, [
 			'label'  			=> 'Title (Optional)',
 			'error_bubbling' 	=> true,
-		));
+		]);
 
-	    $builder->add('accreditation', null, array(
+	    $builder->add('accreditation', null, [
 		    'label'  			=> 'Accreditation (Optional)',
 		    'error_bubbling' 	=> true,
-	    ));
+	    ]);
 
-		$builder->add('category', 'choice', array(
+		$builder->add('category', 'choice', [
 			'label'     		=> 'Category',
 			'error_bubbling' 	=> true,
 			'empty_value' 		=> false,
 			'choices'			=> $this->categories,
-		));	
+		]);
 
-		$builder->add('upload', null, array(
+		$builder->add('upload', null, [
 			'label'     		=> 'Upload Image',
 			'error_bubbling' 	=> true,
-		));
+		]);
 	}
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
-	    $resolver->setDefaults(array(
+	    $resolver->setDefaults([
 	        'data_class' => 'Stems\MediaBundle\Entity\Image',
-	    ));
+	    ]);
 	}
 
 	public function getName()
